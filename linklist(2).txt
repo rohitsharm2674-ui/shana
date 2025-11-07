@@ -1,0 +1,128 @@
+class StudentNode:
+    def __init__(self, rollno, name, marks):
+        self.rollno = rollno
+        self.name = name
+        self.marks = marks
+        self.next = None
+
+
+class StudentLinkedList:
+    def __init__(self):
+        self.head = None
+
+    def add_student(self, rollno, name, marks):
+        new_node = StudentNode(rollno, name, marks)
+        if self.head is None:
+            self.head = new_node
+        else:
+            current = self.head
+            while current.next:
+                current = current.next
+            current.next = new_node
+        print("=== Student Record Added Successfully ===")
+
+    def delete_student(self, rollno):
+        current = self.head
+        prev = None
+        while current:
+            if current.rollno == rollno:
+                if prev:
+                    prev.next = current.next
+                else:
+                    self.head = current.next
+                print("=== Student Record Deleted Successfully ===")
+                return
+            prev = current
+            current = current.next
+        print("=== Student Not Found ===")
+
+    def update_student(self, rollno, new_name, new_marks):
+        current = self.head
+        while current:
+            if current.rollno == rollno:
+                current.name = new_name
+                current.marks = new_marks
+                print("=== Student Record Updated Successfully ===")
+                return
+            current = current.next
+        print("=== Student Not Found ===")
+
+    def search_student(self, rollno):
+        current = self.head
+        while current:
+            if current.rollno == rollno:
+                print(f"Found -> Roll No: {current.rollno}, Name: {current.name}, Marks: {current.marks}")
+                return
+            current = current.next
+        print("=== Student Record Not Found ===")
+
+    def display_students(self, sort="rollno", ascending=True):
+        students = []
+        current = self.head
+        while current:
+            students.append((current.rollno, current.name, current.marks))
+            current = current.next
+
+        if not students:
+            print("=== No Records to Display ===")
+            return
+
+        if sort == "rollno":
+            students.sort(key=lambda x: x[0], reverse=not ascending)
+        elif sort == "marks":
+            students.sort(key=lambda x: x[2], reverse=not ascending)
+
+        print("=== Student Records ===")
+        for s in students:
+            print(f"Roll No: {s[0]}, Name: {s[1]}, Marks: {s[2]}")
+
+
+# ===== Example Menu-Driven Program =====
+
+def menu():
+    print("\n===== MENU =====")
+    print("1. Add Student")
+    print("2. Delete Student")
+    print("3. Update Student")
+    print("4. Search Student")
+    print("5. Display Students")
+    print("6. Exit")
+
+student_list = StudentLinkedList()
+
+while True:
+    menu()
+    choice = int(input("Enter your choice (1-6): "))
+
+    if choice == 1:
+        rollno = int(input("Enter Roll No: "))
+        name = input("Enter Name: ")
+        marks = float(input("Enter Marks: "))
+        student_list.add_student(rollno, name, marks)
+
+    elif choice == 2:
+        rollno = int(input("Enter Roll No to delete: "))
+        student_list.delete_student(rollno)
+
+    elif choice == 3:
+        rollno = int(input("Enter Roll No to update: "))
+        name = input("Enter new Name: ")
+        marks = float(input("Enter new Marks: "))
+        student_list.update_student(rollno, name, marks)
+
+    elif choice == 4:
+        rollno = int(input("Enter Roll No to search: "))
+        student_list.search_student(rollno)
+
+    elif choice == 5:
+        sort = input("Sort by (rollno/marks): ").lower()
+        order = input("Ascending? (y/n): ").lower()
+        ascending = order == 'y'
+        student_list.display_students(sort=sort, ascending=ascending)
+
+    elif choice == 6:
+        print("Exiting Program...")
+        break
+
+    else:
+        print("Invalid Choice! Try again.")
